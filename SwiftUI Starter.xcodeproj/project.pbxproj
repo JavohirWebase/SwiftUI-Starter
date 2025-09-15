@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BBC8A34C2E7848E800E5C258 /* setup.sh in Resources */ = {isa = PBXBuildFile; fileRef = BBC8A34B2E7848E000E5C258 /* setup.sh */; };
+		BBC8A4442E7856C100E5C258 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = BBC8A4242E7856C100E5C258 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		BBC8A3382E78445D00E5C258 /* SwiftUI Starter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftUI Starter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BBC8A34B2E7848E000E5C258 /* setup.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup.sh; sourceTree = "<group>"; };
+		BBC8A4242E7856C100E5C258 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -37,7 +37,7 @@
 		BBC8A32F2E78445D00E5C258 = {
 			isa = PBXGroup;
 			children = (
-				BBC8A34B2E7848E000E5C258 /* setup.sh */,
+				BBC8A4242E7856C100E5C258 /* README.md */,
 				BBC8A33A2E78445D00E5C258 /* SwiftUIStarter */,
 				BBC8A3392E78445D00E5C258 /* Products */,
 			);
@@ -115,7 +115,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BBC8A34C2E7848E800E5C258 /* setup.sh in Resources */,
+				BBC8A4442E7856C100E5C258 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
