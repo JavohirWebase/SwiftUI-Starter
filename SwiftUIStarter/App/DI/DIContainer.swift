@@ -8,7 +8,6 @@ final class DIContainer {
     
     func registerDependencies() {
         let networkClient = NetworkClient()
-        let analyticsService = AnalyticsService()
         
         register(NetworkClientProtocol.self) { networkClient }
         register(NetworkClient.self) { networkClient }
@@ -27,7 +26,6 @@ final class DIContainer {
             UserRepository(client: networkClient)
         }
         
-        register(AnalyticsService.self) { analyticsService }
     }
     
     func register<T>(_ type: T.Type, factory: @escaping () -> T) {

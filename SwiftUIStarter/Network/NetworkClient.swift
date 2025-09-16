@@ -17,10 +17,7 @@ final class NetworkClient: NetworkClientProtocol {
         config.waitsForConnectivity = true
         
         self.session = URLSession(configuration: config)
-        
         self.decoder = JSONDecoder()
-        // Important: The API returns camelCase, not snake_case
-        // Remove this line: self.decoder.keyDecodingStrategy = .convertFromSnakeCase
         self.decoder.dateDecodingStrategy = .iso8601
     }
     
@@ -41,22 +38,64 @@ final class NetworkClient: NetworkClientProtocol {
         
         logger.debug("Response Status: \(httpResponse.statusCode)")
         
+        // Handle non-success status codes
         if httpResponse.statusCode != 200 {
+            // Log raw response for debugging
             if let responseString = String(data: data, encoding: .utf8) {
                 logger.error("Error response: \(responseString)")
             }
+            
+            // Parse error response
+            throw try parseErrorResponse(data: data, statusCode: httpResponse.statusCode)
         }
         
-        try handleHTTPResponse(httpResponse, data: data)
-        
+        // Success - decode normal response
         do {
             return try decoder.decode(T.self, from: data)
         } catch {
             if let responseString = String(data: data, encoding: .utf8) {
-                logger.error("Failed to decode response: \(responseString)")
+                logger.error("Failed to decode success response: \(responseString)")
             }
-            logger.error("Decoding error: \(error)")
             throw NetworkError.decodingError
+        }
+    }
+    
+    private func parseErrorResponse(data: Data, statusCode: Int) throws -> NetworkError {
+        // Try to decode server error response
+        if let errorResponse = try? decoder.decode(ServerErrorResponse.self, from: data) {
+            logger.error("Parsed error: \(errorResponse.userMessage)")
+            
+            switch statusCode {
+            case 400:
+                // Validation error - return user-friendly message
+                return .validationError(errorResponse.userMessage)
+            case 401:
+                return .unauthorized
+            case 403:
+                return .forbidden
+            case 404:
+                return .notFound
+            case 500...599:
+                return .serverError(errorResponse.userMessage)
+            default:
+                return .serverError(errorResponse.userMessage)
+            }
+        }
+        
+        // If can't parse error response, return generic error based on status code
+        switch statusCode {
+        case 400:
+            return .validationError("Ma'lumotlar noto'g'ri")
+        case 401:
+            return .unauthorized
+        case 403:
+            return .forbidden
+        case 404:
+            return .notFound
+        case 500...599:
+            return .serverError("Server xatosi: \(statusCode)")
+        default:
+            return .unknown
         }
     }
     
@@ -105,23 +144,5 @@ final class NetworkClient: NetworkClientProtocol {
         }
         
         return components.url
-    }
-    
-    private func handleHTTPResponse(_ response: HTTPURLResponse, data: Data) throws {
-        switch response.statusCode {
-        case 200...299:
-            return
-        case 401:
-            NotificationCenter.default.post(name: .unauthorized, object: nil)
-            throw NetworkError.unauthorized
-        case 403:
-            throw NetworkError.forbidden
-        case 404:
-            throw NetworkError.notFound
-        case 500...599:
-            throw NetworkError.serverError("Server error: \(response.statusCode)")
-        default:
-            throw NetworkError.unknown
-        }
     }
 }

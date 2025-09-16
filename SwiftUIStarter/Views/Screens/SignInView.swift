@@ -20,12 +20,10 @@ struct SignInView: View {
             .padding()
         }
         .background(Color(UIColor.systemGroupedBackground))
-        .alert("Error", isPresented: $viewModel.showError) {
-            Button("OK") { }
-        } message: {
-            Text(viewModel.errorMessage)
-        }
         .disabled(viewModel.isLoading)
+        .onAppear {
+            viewModel.setAppState(appState)
+        }
     }
     
     private var headerSection: some View {
@@ -66,7 +64,7 @@ struct SignInView: View {
                 field: .password,
                 onSubmit: {
                     Task {
-                        await viewModel.signIn(appState: appState)
+                        await viewModel.signIn()
                     }
                 }
             )
@@ -87,7 +85,7 @@ struct SignInView: View {
     private var signInButton: some View {
         Button {
             Task {
-                await viewModel.signIn(appState: appState)
+                await viewModel.signIn()
             }
         } label: {
             Group {

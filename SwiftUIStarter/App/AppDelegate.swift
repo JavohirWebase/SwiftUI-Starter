@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         NetworkMonitor.shared.startMonitoring()
         logger.info("App launched with environment: \(AppEnvironment.current.rawValue)")
+        UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         return true
     }
 }

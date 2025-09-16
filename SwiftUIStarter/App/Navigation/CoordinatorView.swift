@@ -27,6 +27,7 @@ struct CoordinatorView: View {
                     DetailView(id: id)
                 }
             }
+            .toastView(alignment: .top)
         }
         .sheet(item: $coordinator.sheet) { sheet in
             switch sheet {
