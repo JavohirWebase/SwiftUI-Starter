@@ -63,7 +63,6 @@ final class NetworkClient: NetworkClientProtocol {
     private func parseErrorResponse(data: Data, statusCode: Int) throws -> NetworkError {
         // Try to decode server error response
         if let errorResponse = try? decoder.decode(ServerErrorResponse.self, from: data) {
-            logger.error("Parsed error: \(errorResponse.userMessage)")
             
             switch statusCode {
             case 400:
@@ -132,7 +131,6 @@ final class NetworkClient: NetworkClientProtocol {
     
     private func buildURL(for endpoint: Endpoint) -> URL? {
         let urlString = AppEnvironment.current.baseURL + endpoint.path
-        logger.debug("Building URL: \(urlString)")
         
         guard var components = URLComponents(string: urlString) else {
             logger.error("Failed to create URL from: \(urlString)")

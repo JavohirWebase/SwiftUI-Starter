@@ -22,17 +22,13 @@ final class AuthRepository: AuthRepositoryProtocol {
             parameters: SignInRequest(username: username, password: password),
             requiresAuth: false
         )
-        
-        logger.info("Attempting login for user: \(username)")
-        
+                
         let response: SignInResponse = try await client.requestAsync(endpoint)
         
         // Save tokens
         TokenManager.shared.saveToken(response.accessToken)
         TokenManager.shared.saveRefreshToken(response.refreshToken)
-        
-        logger.info("Login successful for user: \(response.userInfo.userName ?? "unknown")")
-        
+                
         return response.userInfo
     }
     
